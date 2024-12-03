@@ -1,0 +1,42 @@
+# Test root endpoint
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+# Search for a recipe by name from external API
+GET http://127.0.0.1:8000/recipe/Spaghetti
+Accept: application/json
+
+###
+
+# Get all meals from the mock database
+GET http://127.0.0.1:8000/meals
+Accept: application/json
+
+###
+
+# Add a new meal to the mock database
+POST http://127.0.0.1:8000/meals
+#content-type bylo wczesniej
+Accept: application/json
+
+
+###
+
+# Get a specific meal by ID
+GET http://127.0.0.1:8000/meals/1
+Accept: application/json
+
+###
+
+# Update an existing meal
+PUT http://127.0.0.1:8000/meals/1
+Accept: application/json
+
+
+###
+
+# Delete a meal by ID
+DELETE http://127.0.0.1:8000/meals/1
+Accept: application/json
