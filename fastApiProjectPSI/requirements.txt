@@ -1,6 +1,0 @@
-fastapi
-uvicorn
-aiohttp
-sqlalchemy
-psycopg2-binary
-pydantic
