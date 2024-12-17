@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 from typing import Any, Iterable
 
-from core.domain.meal import Meal, MealBroker
+from src.core.domain.meal import MealBroker
 
 class IMealRepository(ABC):
     """An abstract class representing a meal repository"""
