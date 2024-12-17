@@ -3,21 +3,9 @@
 from typing import Iterable, Optional
 from pydantic import BaseModel
 
+from core.domain.meal import Meal
 
 meals = []
-
-class Meal(BaseModel):
-    """Model for the meal data."""
-    idMeal: str
-    strMeal: str
-    strCategory: Optional[str]
-    strArea: Optional[str]
-    strInstructions: Optional[str]
-    strMealThumb: Optional[str]
-    strTags: Optional[str]
-    strYoutube: Optional[str]
-    ingredients: list[str] = []
-    measures: list[str] = []
 
 
 class MealIn(BaseModel):
