@@ -1,7 +1,7 @@
 from typing import Iterable
 
 from fastapi import FastAPI, HTTPException, Body
-from infrastructure.repositories.mealmock import MealMockRepository, Meal, MealIn
+from src.infrastructure.repositories.mealmock import MealMockRepository, Meal, MealIn
 
 app = FastAPI()
 meal_repository = MealMockRepository()

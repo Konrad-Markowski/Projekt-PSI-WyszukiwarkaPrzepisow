@@ -4,7 +4,7 @@
 from datatime import datatime, timedelta, timezone
 
 from jose import JWTError
-from pydatntic import UUID4
+from pydantic import UUID4
 
 from src.infrastructure.utils.consts import(
     EXPIRATION_MINUTES,

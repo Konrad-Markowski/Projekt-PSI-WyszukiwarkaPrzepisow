@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.mutable import MutableList
 from src.config import config
 
+
 """A module providing database access."""
 
 
