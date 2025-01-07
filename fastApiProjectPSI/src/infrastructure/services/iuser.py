@@ -56,3 +56,15 @@ class IUserService(ABC):
         Returns:
             UserDTO | None: The user data, if found.
         """
+    
+    @abstractmethod
+    async def recommend_meals(user_id: UUID4, count: int = 5):
+         """A method randomly selecting 5 meals and displaying them as a JSON file structure.
+
+        Args:
+            user_id (UUID4): The UUID of the user.
+            count (int): The number of meals to recommend. Defaults to 5.
+
+        Returns:
+            List: A list of dictionaries containing user_id and meal_id pairs.
+        """

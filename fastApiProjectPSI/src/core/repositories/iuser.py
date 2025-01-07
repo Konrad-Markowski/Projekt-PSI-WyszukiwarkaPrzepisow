@@ -41,3 +41,5 @@ class IUserRepository(ABC):
         Returns:
             Any | None: The user object if exists.
         """
+
+    

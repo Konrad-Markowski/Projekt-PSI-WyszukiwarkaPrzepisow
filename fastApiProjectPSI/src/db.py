@@ -29,6 +29,25 @@ user_table = sqlalchemy.Table(
     sqlalchemy.Column("password", sqlalchemy.String),
 )
 
+user_recommendations = sqlalchemy.Table(
+    "user_recommendations",
+    metadata,
+    sqlalchemy.Column(
+        "user_id",
+        UUID(as_uuid=True),
+        sqlalchemy.ForeignKey("users.id"),
+        primary_key=True,
+    ),
+    sqlalchemy.Column(
+        "meal_id",
+        sqlalchemy.Integer,
+        sqlalchemy.ForeignKey("meals.id"),
+        primary_key=True,
+    ),
+    sqlalchemy.Index('ix_user_recommendations_user_id', 'user_id'),
+    sqlalchemy.Index('ix_user_recommendations_meal_id', 'meal_id'),
+)
+
 meal_table = sqlalchemy.Table(
     "meals",
     metadata,
@@ -50,7 +69,7 @@ meal_table = sqlalchemy.Table(
     sqlalchemy.Column("strCategory", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strArea", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strMealThumb", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True), #zmienić na ARRAY
+    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True), #zmienić potem na ARRAY
     sqlalchemy.Column("strYoutube", sqlalchemy.String, nullable=True),
     sqlalchemy.Column(
         "user_id",

@@ -112,3 +112,50 @@ async def get_user_by_email(
         status_code=404,
         detail="User not found",
     )
+
+@router.post("/user/{uuid}/recommendations", status_code=200)
+@inject
+async def get_recommendations(
+    uuid: UUID4,
+    service: IUserService = Depends(Provide[Container.user_service]),
+) -> dict:
+    """Endpoint to get meal recommendations for a user.
+
+    Args:
+        uuid (UUID4): The UUID of the user.
+        service (IUserService, optional): The injected user service.
+
+    Returns:
+        dict: The recommended meals.
+    """
+
+    recommendations = await service.recommend_meals(uuid)
+    return {"recommendations": recommendations}
+
+# modify later
+'''@router.post("/user/{uuid}/favorites/{meal_id}", status_code=200)
+@inject
+async def add_meal_to_favorites(
+    uuid: UUID4,
+    meal_id: str,
+    service: IUserService = Depends(Provide[Container.user_service]),
+) -> dict:
+    """A router coroutine for adding a meal to user's favorites.
+
+    Args:
+        uuid (UUID4): The UUID of the user.
+        meal_id (str): The ID of the meal to add to favorites.
+        service (IUserService, optional): The injected user service.
+
+    Returns:
+        dict: The updated user DTO details.
+    """
+
+    if updated_user := await service.add_meal_to_favorites(uuid, meal_id):
+        return updated_user.model_dump()
+
+    raise HTTPException(
+        status_code=400,
+        detail="Failed to add meal to favorites",
+    )
+'''

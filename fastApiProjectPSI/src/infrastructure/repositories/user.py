@@ -3,7 +3,7 @@ from pydantic import UUID4
 from src.infrastructure.utils.password import hash_password
 from src.core.domain.user import UserIn
 from src.core.repositories.iuser import IUserRepository
-from src.db import database, user_table
+from src.db import database, user_table, meal_table
 
 
 
@@ -66,3 +66,20 @@ class UserRepository(IUserRepository):
         user = await database.fetch_one(query)
 
         return user
+    
+    #make sure that it selects a JSON dictionary and it inserts values correctly 
+    async def recommend_meals(user_id: UUID4, count: int = 5):
+        query = meal_table \
+            .select() \
+            .order_by(meal_table.func.random()) \
+            .limit(count)
+        meals = await database.fetch_all(query)
+        
+        recommendations = [
+            {"user_id": user_id, "meal_id": meal["id"]}
+            for meal in meals
+        ]
+        
+        query = user_recommendations.insert().values(recommendations)
+        await database.execute(query)
+        return recommendations
