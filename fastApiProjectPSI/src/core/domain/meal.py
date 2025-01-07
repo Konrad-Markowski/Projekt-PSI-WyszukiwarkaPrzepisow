@@ -7,8 +7,8 @@ class MealIn(BaseModel):
     """Model representing airport's DTO attributes."""
     strMeal: str
     strInstructions: str
-    ingredients: List[str] = []
-    measures: List[str] = []
+    ingredients: List[str]
+    measures: List[str]
     strCategory: Optional[str] = None
     strArea: Optional[str] = None
     strMealThumb: Optional[str] = None

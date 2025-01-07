@@ -37,20 +37,20 @@ meal_table = sqlalchemy.Table(
     sqlalchemy.Column("strInstructions", sqlalchemy.String),
     sqlalchemy.Column(
         "ingredients",
-        MutableList.as_mutable(sqlalchemy.PickleType),  # type: ignore
+        sqlalchemy.ARRAY(sqlalchemy.String),
         nullable=True,
         default=[],
     ),
     sqlalchemy.Column(
         "measures",
-        MutableList.as_mutable(sqlalchemy.PickleType),  # type: ignore
+        sqlalchemy.ARRAY(sqlalchemy.String),
         nullable=True,
         default=[],
     ),
     sqlalchemy.Column("strCategory", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strArea", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strMealThumb", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True),
+    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True), #zmienić na ARRAY
     sqlalchemy.Column("strYoutube", sqlalchemy.String, nullable=True),
     sqlalchemy.Column(
         "user_id",
@@ -79,7 +79,7 @@ database = databases.Database(
 )
 
 
-async def init_db(retries: int = 5, delay: int = 5) -> None:
+async def init_db(retries: int = 5, delay: int = 10) -> None:
     """Function initializing the DB.
 
     Args:
@@ -87,6 +87,8 @@ async def init_db(retries: int = 5, delay: int = 5) -> None:
             Defaults to 5.
         delay (int, optional): Delay of connect do DB. Defaults to 2.
     """
+
+    await asyncio.sleep(delay)
     for attempt in range(retries):
         try:
             async with engine.begin() as conn:
