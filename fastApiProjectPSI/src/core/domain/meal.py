@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from pydantic import BaseModel, UUID4, ConfigDict
+from pydantic import BaseModel, UUID1, ConfigDict
 
 
 class MealIn(BaseModel):
@@ -19,7 +19,7 @@ class MealIn(BaseModel):
 
 class MealBroker(MealIn):
     """A broker class introducing user in the model"""
-    user_id: UUID4
+    user_id: UUID1
 
 
 class Meal(MealBroker):
