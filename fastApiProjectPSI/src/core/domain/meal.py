@@ -1,6 +1,6 @@
 from typing import Optional, List
 
-from pydantic import BaseModel, UUID4, ConfigDict
+from pydantic import BaseModel, UUID1, ConfigDict
 
 
 class MealIn(BaseModel):
