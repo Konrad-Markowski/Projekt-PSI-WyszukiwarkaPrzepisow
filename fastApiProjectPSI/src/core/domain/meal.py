@@ -19,7 +19,7 @@ class MealIn(BaseModel):
 
 class MealBroker(MealIn):
     """A broker class introducing user in the model"""
-    user_id: UUID4
+    user_id: UUID1
 
 
 class Meal(MealBroker):
