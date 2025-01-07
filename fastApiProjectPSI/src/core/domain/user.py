@@ -1,6 +1,6 @@
-from pydantic import BaseModel, ConfigDict, UUID1
-
 """A model containing user-related models."""
+
+from pydantic import BaseModel, ConfigDict, UUID1
 
 
 class UserIn(BaseModel):

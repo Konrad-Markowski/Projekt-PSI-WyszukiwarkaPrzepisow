@@ -32,11 +32,11 @@ class IUserRepository(ABC):
         """
 
     @abstractmethod
-    async def get_by_email(self, email: EmailStr) -> Any | None:
+    async def get_by_email(self, email: str) -> Any | None:
         """A method getting user by email.
 
         Args:
-            email (EmailStr): The email of the user.
+            email (str): The email of the user.
 
         Returns:
             Any | None: The user object if exists.

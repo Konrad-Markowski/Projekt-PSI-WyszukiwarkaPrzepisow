@@ -1,12 +1,11 @@
-"""A module containing helper functions for generating tokens"""
+"""A module containing helper functions for token generation."""
 
+from datetime import datetime, timedelta, timezone
 
-from datatime import datatime, timedelta, timezone
-
-from jose import JWTError
+from jose import jwt
 from pydantic import UUID4
 
-from src.infrastructure.utils.consts import(
+from src.infrastructure.utils.consts import (
     EXPIRATION_MINUTES,
     ALGORITHM,
     SECRET_KEY,
@@ -16,13 +15,13 @@ from src.infrastructure.utils.consts import(
 def generate_user_token(user_uuid: UUID4) -> dict:
     """A function returning JWT token for user.
 
-    Args: 
-        user_uuid (UUID5): The UUID of the user
+    Args:
+        user_uuid (UUID5): The UUID of the user.
 
-    Returns: 
+    Returns:
         dict: The token details.
     """
-    expire = datatime.now(timezone.utc) + timedelta(minutes=EXPIRATION_MINUTES)
+    expire = datetime.now(timezone.utc) + timedelta(minutes=EXPIRATION_MINUTES)
     jwt_data = {"sub": str(user_uuid), "exp": expire, "type": "confirmation"}
     encoded_jwt = jwt.encode(jwt_data, key=SECRET_KEY, algorithm=ALGORITHM)
 

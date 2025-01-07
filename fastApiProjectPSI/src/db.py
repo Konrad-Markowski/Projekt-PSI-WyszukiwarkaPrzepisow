@@ -1,4 +1,7 @@
+"""A module providing database access."""
+
 import asyncio
+
 import databases
 import sqlalchemy
 from sqlalchemy.dialects.postgresql import UUID
@@ -6,89 +9,12 @@ from sqlalchemy.exc import OperationalError, DatabaseError
 from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.ext.mutable import MutableList
 from src.config import config
-
-
-"""A module providing database access."""
-
-
 from asyncpg.exceptions import (    # type: ignore
     CannotConnectNowError,
     ConnectionDoesNotExistError,
 )
 
-
 metadata = sqlalchemy.MetaData()
-
-continent_table = sqlalchemy.Table(
-    "continents",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("name", sqlalchemy.String),
-    sqlalchemy.Column("alias", sqlalchemy.String),
-)
-
-country_table = sqlalchemy.Table(
-    "countries",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("name", sqlalchemy.String),
-    sqlalchemy.Column("alias", sqlalchemy.String),
-    sqlalchemy.Column(
-        "continent_id",
-        sqlalchemy.ForeignKey("continents.id"),
-        nullable=False,
-    ),
-)
-
-airport_table = sqlalchemy.Table(
-    "airports",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("name", sqlalchemy.String),
-    sqlalchemy.Column("icao_code", sqlalchemy.String),
-    sqlalchemy.Column("iata_code", sqlalchemy.String),
-    sqlalchemy.Column(
-        "country_id",
-        sqlalchemy.ForeignKey("countries.id"),
-        nullable=False,
-    ),
-    sqlalchemy.Column("latitude", sqlalchemy.String),
-    sqlalchemy.Column("longitude", sqlalchemy.String),
-    sqlalchemy.Column("elevation", sqlalchemy.Integer),
-    sqlalchemy.Column("vor_freq", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("dme_freq", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("ils_loc_freq", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("ils_gs_freq", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column(
-        "user_id",
-        sqlalchemy.ForeignKey("users.id"),
-        nullable=False,
-    ),
-)
-
-metar_table = sqlalchemy.Table(
-    "metars",
-    metadata,
-    sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
-    sqlalchemy.Column("icao_code", sqlalchemy.String),
-    sqlalchemy.Column("date_time", sqlalchemy.DateTime, nullable=True),
-    sqlalchemy.Column("wind_speed", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("wind_direction", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("wind_var_from", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("wind_var_to", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("wind_gust", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("rvr", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("rvr_direction", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("dew_point", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column(
-        "sky",
-        MutableList.as_mutable(sqlalchemy.PickleType),  # type: ignore
-        nullable=True,
-        default=[],
-    ),
-    sqlalchemy.Column("temp", sqlalchemy.Float, nullable=True),
-    sqlalchemy.Column("qnh", sqlalchemy.Float, nullable=True),
-)
 
 user_table = sqlalchemy.Table(
     "users",
@@ -108,12 +34,7 @@ meal_table = sqlalchemy.Table(
     metadata,
     sqlalchemy.Column("id", sqlalchemy.Integer, primary_key=True),
     sqlalchemy.Column("strMeal", sqlalchemy.String),
-    sqlalchemy.Column("strCategory", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("strArea", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strInstructions", sqlalchemy.String),
-    sqlalchemy.Column("strMealThumb", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("strYoutube", sqlalchemy.String, nullable=True),
     sqlalchemy.Column(
         "ingredients",
         MutableList.as_mutable(sqlalchemy.PickleType),  # type: ignore
@@ -126,6 +47,18 @@ meal_table = sqlalchemy.Table(
         nullable=True,
         default=[],
     ),
+    sqlalchemy.Column("strCategory", sqlalchemy.String, nullable=True),
+    sqlalchemy.Column("strArea", sqlalchemy.String, nullable=True),
+    sqlalchemy.Column("strMealThumb", sqlalchemy.String, nullable=True),
+    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True),
+    sqlalchemy.Column("strYoutube", sqlalchemy.String, nullable=True),
+    sqlalchemy.Column(
+        "user_id",
+        UUID(as_uuid=True),
+        sqlalchemy.ForeignKey("users.id"),
+        nullable=False,
+    ),
+    sqlalchemy.ForeignKeyConstraint(['user_id'], ['users.id'])
 )
 
 db_uri = (
@@ -142,7 +75,7 @@ engine = create_async_engine(
 
 database = databases.Database(
     db_uri,
-    force_rollback=True,
+    # force_rollback=True,
 )
 
 

@@ -71,7 +71,7 @@ async def get_all_meals(
         Iterable: The meal attributes collection.
     """
 
-    meals = await service.get_all()
+    meals = await service.get_all_meals()
 
     return meals
 

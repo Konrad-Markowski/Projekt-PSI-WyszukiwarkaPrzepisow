@@ -19,12 +19,13 @@ class MealService(IMealService):
         """
         self._repository = repository
 
-    async def get_all(self) -> Iterable[MealDTO]:
+    async def get_all_meals(self) -> Iterable[MealDTO]:
         """The method getting all meals from the repository.
 
         Returns:
             Iterable[MealDTO]: All meals.
         """
+
         return await self._repository.get_all_meals()
 
     async def get_by_id(self, meal_id: int) -> MealDTO | None:
@@ -36,6 +37,7 @@ class MealService(IMealService):
         Returns:
             MealDTO | None: The meal details.
         """
+
         return await self._repository.get_by_id(meal_id)
 
     async def get_by_category(self, category_id: int) -> Iterable[Meal]:
@@ -47,7 +49,32 @@ class MealService(IMealService):
         Returns:
             Iterable[Meal]: Meals assigned to a category.
         """
+
         return await self._repository.get_by_category(category_id)
+
+    async def get_by_area(self, area: str) -> Iterable[Meal]:
+        """The method getting meals by area.
+
+        Args:
+            area (str): The area of the meals.
+
+        Returns:
+            Iterable[Meal]: Meals from the specified area.
+        """
+
+        return await self._repository.get_by_area(area)
+
+    async def get_by_name(self, name: str) -> MealDTO | None:
+        """The method getting meal by name.
+
+        Args:
+            name (str): The name of the meal.
+
+        Returns:
+            MealDTO | None: The meal details.
+        """
+
+        return await self._repository.get_by_name(name)
 
     async def add_meal(self, data: MealBroker) -> Meal | None:
         """The method adding new meal to the data storage.
@@ -58,6 +85,7 @@ class MealService(IMealService):
         Returns:
             Meal | None: Full details of the newly added meal.
         """
+
         return await self._repository.add_meal(data)
 
     async def update_meal(self, meal_id: int, data: MealBroker) -> Meal | None:
@@ -70,6 +98,7 @@ class MealService(IMealService):
         Returns:
             Meal | None: The updated meal details.
         """
+
         return await self._repository.update_meal(meal_id, data)
 
     async def delete_meal(self, meal_id: int) -> bool:
@@ -81,4 +110,5 @@ class MealService(IMealService):
         Returns:
             bool: Success of the operation.
         """
+
         return await self._repository.delete_meal(meal_id)

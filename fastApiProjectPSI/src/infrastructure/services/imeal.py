@@ -1,7 +1,7 @@
 """Module containing meal service abstractions."""
 
 from abc import ABC, abstractmethod
-from typing import Iterable
+from typing import Any, Iterable, Optional
 
 from src.core.domain.meal import Meal, MealBroker
 from src.infrastructure.dto.mealdto import MealDTO
@@ -11,7 +11,7 @@ class IMealService(ABC):
     """A class representing meal repository"""
 
     @abstractmethod
-    async def get_all_meals(self) -> Iterable[MealDTO]:
+    async def get_all_meals(self) -> Iterable[Any]:
         """
         The abstract method for getting all meals from the database.
 
@@ -23,7 +23,7 @@ class IMealService(ABC):
         """
 
     @abstractmethod
-    async def get_by_id(self, meal_id: int) -> Iterable[MealDTO] | None:
+    async def get_by_id(self, meal_id: int) -> Optional[Any]:
         """The abstract method for getting a meal recipe by provided id.
 
         Args:
@@ -34,40 +34,40 @@ class IMealService(ABC):
         """
 
     @abstractmethod
-    async def get_by_name(self, meal_name: str) -> Iterable[MealDTO]:
+    async def get_by_name(self, meal_name: str) -> Iterable[Any]:
         """The abstract method for getting a meal recipe by provided meal name.
 
         Args:
             meal_name (str): The name of the meal.
 
         Returns:
-            Any | None: The meal details available.
+            Iterable[Any]: The meal details available.
         """
 
     @abstractmethod
-    async def get_by_category(self, meal_category: str) -> Iterable[MealDTO]:
+    async def get_by_category(self, meal_category: str) -> Iterable[Any]:
         """The abstract method for getting a meal recipe by provided meal category.
 
         Args:
             meal_category (str): The category of the meal.
 
         Returns:
-            Any | None: The meal details available.
+            Iterable[Any]: The meal details available.
         """
 
     @abstractmethod
-    async def get_by_area(self, meal_area: str) -> Iterable[MealDTO]:
+    async def get_by_area(self, meal_area: str) -> Iterable[Any]:
         """The abstract method for getting a meal recipe by provided meal area.
 
         Args:
             meal_area (str): The area of the meal.
 
         Returns:
-            Any | None: The meal details available.
+            Iterable[Any]: The meal details available.
         """
 
     @abstractmethod
-    async def add_meal(self, data: MealBroker) -> Meal | None:
+    async def add_meal(self, data: MealBroker) -> Optional[Any]:
         """The abstract method for adding a meal to the data storage.
 
         Args:
@@ -89,7 +89,7 @@ class IMealService(ABC):
         """
 
     @abstractmethod
-    async def update_meal(self, meal_id: int, data: MealBroker) -> Meal | None:
+    async def update_meal(self, meal_id: int, data: MealBroker) -> Optional[Any]:
         """The abstract method for updating a meal in the data storage.
 
         Args:

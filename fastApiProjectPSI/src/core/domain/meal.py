@@ -1,19 +1,19 @@
-from typing import Optional
+from typing import Optional, List
 
 from pydantic import BaseModel, UUID4, ConfigDict
 
 
 class MealIn(BaseModel):
-    """Model for input meal data."""
+    """Model representing airport's DTO attributes."""
     strMeal: str
-    strCategory: Optional[str]
-    strArea: Optional[str]
     strInstructions: str
-    strMealThumb: Optional[str]
-    strTags: Optional[str]
-    strYoutube: Optional[str]
-    ingredients: list[str] = []
-    measures: list[str] = []
+    ingredients: List[str] = []
+    measures: List[str] = []
+    strCategory: Optional[str] = None
+    strArea: Optional[str] = None
+    strMealThumb: Optional[str] = None
+    strTags: Optional[str] = None
+    strYoutube: Optional[str] = None
 
 
 

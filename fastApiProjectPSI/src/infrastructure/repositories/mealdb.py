@@ -1,15 +1,14 @@
 from typing import Any, Iterable, Optional
+from asyncpg import Record  # type: ignore
 from sqlalchemy import select, join
+
 from src.core.repositories.imeal import IMealRepository
 from src.core.domain.meal import Meal, MealBroker
-from src.infrastructure.dto.mealdto import MealDTO
-
-from asyncpg import Record  # type: ignore
-
 from src.db import (
     meal_table,
     database,
 )
+from src.infrastructure.dto.mealdto import MealDTO
 
 
 class MealRepository(IMealRepository):
@@ -76,13 +75,39 @@ class MealRepository(IMealRepository):
             Any | None: The meal details.
         """
 
-        query = meal_table \
-            .select() \
-            .where(meal_table.c.id == meal_id) \
-            .order_by(meal_table.c.strMeal.asc())
-        meal = await database.fetch_one(query)
+        meal = await self._get_by_id(meal_id)
 
         return MealDTO.from_record(meal) if meal else None
+
+    async def get_by_name(self, name: str) -> Iterable[Any]:
+        """The method getting meals by their name.
+
+        Args:
+            name (str): The name of the meal.
+
+        Returns:
+            Iterable[Any]: Meals with the specified name.
+        """
+
+        query = meal_table \
+            .select() \
+            .where(meal_table.c.strMeal.ilike(f"%{name}%")) \
+            .order_by(meal_table.c.strMeal.asc())
+        meals = await database.fetch_all(query)
+
+        return [Meal(**dict(meal)) for meal in meals]
+
+    async def get_by_user(self, user_id: int) -> Iterable[Any]:
+        """The method getting meals by user who added them.
+
+        Args:
+            user_id (int): The id of the user.
+
+        Returns:
+            Iterable[Any]: The meal collection.
+        """
+
+        return []
 
     async def add_meal(self, data: MealBroker) -> Any | None:
         """The method adding new meal to the data storage.

@@ -64,7 +64,7 @@ class UserService(IUserService):
         return await self._repository.get_by_uuid(uuid)
 
 
-    async def get_by_email(self, email: EmailStr) -> UserDTO | None:
+    async def get_by_email(self, email: str) -> UserDTO | None:
         """A method getting user by email.
 
         Args:

@@ -32,6 +32,17 @@ class IMealRepository(ABC):
         """
 
     @abstractmethod
+    async def get_by_user(self, user_id: int) -> Iterable[Any]:
+        """The abstract getting meals by user who added them.
+
+        Args:
+            user_id (int): The id of the user.
+
+        Returns:
+            Iterable[Any]: The meal collection.
+        """
+
+    @abstractmethod
     async def get_by_name(self, meal_name: str) -> Any | None:
         """The abstract method for getting a meal recipe by provided meal name.
 
