@@ -1,5 +1,5 @@
 from typing import Any
-from pydantic import UUID5
+from pydantic import UUID4
 from src.infrastructure.utils.password import hash_password
 from src.core.domain.user import UserIn
 from src.core.repositories.iuser import IUserRepository
@@ -33,11 +33,11 @@ class UserRepository(IUserRepository):
 
         return await self.get_by_uuid(new_user_uuid)
 
-    async def get_by_uuid(self, uuid: UUID5) -> Any | None:
+    async def get_by_uuid(self, uuid: UUID4) -> Any | None:
         """A method getting user by UUID.
 
         Args:
-            uuid (UUID5): UUID of the user.
+            uuid (UUID4): UUID of the user.
 
         Returns:
             Any | None: The user object if exists.

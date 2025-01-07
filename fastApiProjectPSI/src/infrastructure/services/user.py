@@ -1,6 +1,6 @@
 """A module containing user service."""
 
-from pydantic import UUID4, EmailStr
+from pydantic import UUID4
 
 from src.core.domain.user import UserIn
 from src.core.repositories.iuser import IUserRepository
@@ -55,7 +55,7 @@ class UserService(IUserService):
         """A method getting user by UUID.
 
         Args:
-            uuid (UUID5): The UUID of the user.
+            uuid (UUID4): The UUID of the user.
 
         Returns:
             UserDTO | None: The user data, if found.

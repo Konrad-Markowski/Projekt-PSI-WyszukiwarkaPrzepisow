@@ -3,7 +3,7 @@
 
 from abc import ABC, abstractmethod
 
-from pydantic import UUID5
+from pydantic import UUID4
 
 from src.core.domain.user import UserIn
 from src.infrastructure.dto.userdto import UserDTO
@@ -36,11 +36,11 @@ class IUserService(ABC):
         """
 
     @abstractmethod
-    async def get_by_uuid(self, uuid: UUID5) -> UserDTO | None:
+    async def get_by_uuid(self, uuid: UUID4) -> UserDTO | None:
         """A method getting user by UUID.
 
         Args:
-            uuid (UUID5): The UUID of the user.
+            uuid (UUID4): The UUID of the user.
 
         Returns:
             UserDTO | None: The user data, if found.
