@@ -42,4 +42,37 @@ class IUserRepository(ABC):
             Any | None: The user object if exists.
         """
 
-    
+    @abstractmethod
+    async def add_to_favourites(self, uuid: UUID4, meal_name: str) -> Any | None:
+        """A method to add a meal name to the user's favourites.
+
+        Args:
+            uuid (UUID4): The UUID of the user.
+            meal_name (str): The name of the meal to add.
+
+        Returns:
+            Any | None: The updated user object if successful.
+        """
+
+    @abstractmethod
+    async def remove_from_favourites(self, uuid: UUID4, meal_id: UUID4) -> bool:
+        """A method to remove a meal by its ID from the user's favourites.
+
+        Args:
+            uuid (UUID4): The UUID of the user.
+            meal_id (UUID4): The ID of the meal to remove.
+
+        Returns:
+            bool: True if the meal was successfully removed, False otherwise.
+        """
+
+    @abstractmethod
+    async def get_favourites(self, uuid: UUID4) -> Any | None:
+        """A method to get the user's favourites.
+
+        Args:
+            uuid (UUID4): The UUID of the user.
+
+        Returns:
+            Any | None: The user's favourites.
+        """

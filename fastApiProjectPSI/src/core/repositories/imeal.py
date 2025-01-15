@@ -1,8 +1,9 @@
 """Module containing meal repository abstractions"""
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterable
+from typing import Any, Iterable, List
 
+from src.infrastructure.dto.mealdto import MealDTO
 from src.core.domain.meal import MealBroker
 
 class IMealRepository(ABC):
@@ -107,4 +108,15 @@ class IMealRepository(ABC):
 
         Returns:
             Any | None: The newly updated meal.
+        """
+
+    @abstractmethod
+    async def recommend_meals(self, n: int = 3) -> List[MealDTO]:
+        """The method recommending random meals.
+
+        Args:
+            n (int, optional): The number of meals to recommend. Defaults to 3.
+
+        Returns:
+            List[MealDTO]: A list of recommended meals.
         """

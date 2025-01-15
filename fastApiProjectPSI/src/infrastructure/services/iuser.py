@@ -58,13 +58,36 @@ class IUserService(ABC):
         """
     
     @abstractmethod
-    async def recommend_meals(user_id: UUID4, count: int = 5):
-         """A method randomly selecting 5 meals and displaying them as a JSON file structure.
+    async def add_to_favourites(self, uuid: UUID4, meal_id: int) -> UserDTO | None:
+        """A method to add a meal to the user's favourites.
 
         Args:
-            user_id (UUID4): The UUID of the user.
-            count (int): The number of meals to recommend. Defaults to 5.
+            uuid (UUID4): The UUID of the user.
+            meal_id (int): The ID of the meal to add.
 
         Returns:
-            List: A list of dictionaries containing user_id and meal_id pairs.
+            UserDTO | None: The updated user DTO if successful.
+        """
+        
+    @abstractmethod
+    async def remove_from_favourites(self, uuid: UUID4, meal_id: int) -> bool:
+        """A method to remove a meal from the user's favourites.
+
+        Args:
+             uuid (UUID4): The UUID of the user.
+             meal_id (int): The ID of the meal to remove.
+
+        Returns:
+            bool: True if the meal was successfully removed, False otherwise.
+        """
+        
+    @abstractmethod
+    async def get_favourites(self, uuid: UUID4) -> list:
+        """A method to get the user's favourite meals.
+
+        Args:
+            uuid (UUID4): The UUID of the user.
+
+        Returns:
+            list: A list of favourite meal names.
         """

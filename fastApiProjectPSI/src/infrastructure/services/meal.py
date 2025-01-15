@@ -1,6 +1,6 @@
 """Module containing service implementation"""
 
-from typing import Iterable
+from typing import Iterable, List
 
 from src.core.domain.meal import Meal, MealBroker
 from src.core.repositories.imeal import IMealRepository
@@ -39,6 +39,18 @@ class MealService(IMealService):
         """
 
         return await self._repository.get_by_id(meal_id)
+    
+    async def recommend_meals(self, n: int = 3) -> List[dict]:
+        """The method recommending random meals.
+
+        Args:
+            n (int, optional): The number of meals to recommend. Defaults to 3.
+
+        Returns:
+            List[dict]: A list of recommended meals as dictionaries.
+        """
+        recommendations = await self._repository.recommend_meals(n)
+        return recommendations
 
     async def get_by_category(self, category_id: int) -> Iterable[Meal]:
         """The method getting meals assigned to a particular category.
@@ -112,3 +124,7 @@ class MealService(IMealService):
         """
 
         return await self._repository.delete_meal(meal_id)
+    
+    
+
+

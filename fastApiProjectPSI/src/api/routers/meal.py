@@ -13,6 +13,7 @@ from src.container import Container
 from src.core.domain.meal import Meal, MealIn, MealBroker
 from src.infrastructure.dto.mealdto import MealDTO
 from src.infrastructure.services.imeal import IMealService
+from typing import List
 
 bearer_scheme = HTTPBearer()
 
@@ -74,6 +75,25 @@ async def get_all_meals(
     meals = await service.get_all_meals()
 
     return meals
+
+
+@router.get("/meals/recommendations", status_code=200)
+@inject
+async def recommend_meals(
+    n: int = 3,
+    service: IMealService = Depends(Provide[Container.meal_service]),
+) -> List[dict]:
+    """Endpoint to get random meal recommendations.
+
+    Args:
+        n (int, optional): The number of meals to recommend. Defaults to 3.
+        service (IMealService, optional): The injected service dependency.
+
+    Returns:
+        List[dict]: A list of recommended meals as dictionaries.
+    """
+    recommendations = await service.recommend_meals(n)
+    return recommendations
 
 
 @router.get(
@@ -176,3 +196,6 @@ async def delete_meal(
         return
 
     raise HTTPException(status_code=404, detail="Meal not found")
+
+
+    

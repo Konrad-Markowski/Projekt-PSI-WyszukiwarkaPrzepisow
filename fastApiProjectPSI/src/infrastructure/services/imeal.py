@@ -1,7 +1,7 @@
 """Module containing meal service abstractions."""
 
 from abc import ABC, abstractmethod
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, Optional, List
 
 from src.core.domain.meal import Meal, MealBroker
 from src.infrastructure.dto.mealdto import MealDTO
@@ -55,6 +55,19 @@ class IMealService(ABC):
             Iterable[Any]: The meal details available.
         """
 
+
+    @abstractmethod
+    async def recommend_meals(self, n: int = 3) -> List[dict]:
+        """The method recommending random meals.
+
+        Args:
+            n (int, optional): The number of meals to recommend. Defaults to 3.
+
+        Returns:
+            List[dict]: A list of recommended meals as dictionaries.
+        """
+
+
     @abstractmethod
     async def get_by_area(self, meal_area: str) -> Iterable[Any]:
         """The abstract method for getting a meal recipe by provided meal area.
@@ -99,3 +112,5 @@ class IMealService(ABC):
         Returns:
             Any | None: The newly updated meal.
         """
+
+    

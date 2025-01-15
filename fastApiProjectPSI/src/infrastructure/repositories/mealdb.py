@@ -1,6 +1,6 @@
-from typing import Any, Iterable, Optional
+from typing import Any, Iterable, List, Optional
 from asyncpg import Record  # type: ignore
-from sqlalchemy import select, join
+from sqlalchemy import func, select, join
 
 from src.core.repositories.imeal import IMealRepository
 from src.core.domain.meal import Meal, MealBroker
@@ -190,3 +190,16 @@ class MealRepository(IMealRepository):
             .order_by(meal_table.c.strMeal.asc())
 
         return await database.fetch_one(query)
+
+    async def recommend_meals(self, n: int = 3) -> List[dict]:
+        """A coroutine to get random meal recommendations.
+
+        Args:
+            n (int, optional): The number of meals to recommend. Defaults to 3.
+
+        Returns:
+            List[dict]: A list of recommended meals as dictionaries.
+        """
+        query = select(meal_table).order_by(func.random()).limit(n)
+        meals = await database.fetch_all(query)
+        return [MealDTO.from_record(meal).model_dump() for meal in meals]

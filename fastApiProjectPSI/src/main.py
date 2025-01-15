@@ -47,3 +47,4 @@ async def http_exception_handle_logging(
         Response: The HTTP response.
     """
     return await http_exception_handler(request, exception)
+
