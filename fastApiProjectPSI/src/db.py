@@ -27,6 +27,12 @@ user_table = sqlalchemy.Table(
     ),
     sqlalchemy.Column("email", sqlalchemy.String, unique=True),
     sqlalchemy.Column("password", sqlalchemy.String),
+    sqlalchemy.Column(
+        "favourites",
+        sqlalchemy.ARRAY(sqlalchemy.String),
+        nullable=True,
+        default=[],
+    ),
 )
 
 meal_table = sqlalchemy.Table(
@@ -50,7 +56,7 @@ meal_table = sqlalchemy.Table(
     sqlalchemy.Column("strCategory", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strArea", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strMealThumb", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True), #zmienić na ARRAY
+    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True), # opcjonalnie zmienić potem na ARRAY of strings
     sqlalchemy.Column("strYoutube", sqlalchemy.String, nullable=True),
     sqlalchemy.Column(
         "user_id",

@@ -68,8 +68,45 @@ class UserService(IUserService):
         """A method getting user by email.
 
         Args:
-            email (EmailStr): The email of the user.
+            email (str): The email of the user.
 
         Returns:
-            Any | None: The user object if exists.
+            UserDTO | None: The user object if exists.
         """
+        return await self._repository.get_by_email(email)
+    
+
+    async def add_to_favourites(self, user_uuid: UUID4, meal_id: int) -> bool:
+        """Add a meal to the user's favourites.
+
+        Args:
+            user_uuid (UUID4): The UUID of the user.
+            meal_id (int): The ID of the meal to be added.
+
+        Returns:
+            bool: True if added, False if not found or already exists.
+        """
+        return await self._repository.add_to_favourites(user_uuid, meal_id)
+
+    async def remove_from_favourites(self, user_uuid: UUID4, meal_id: int) -> bool:
+        """Remove a meal from the user's favourites by its ID.
+
+        Args:
+            user_uuid (UUID4): The UUID of the user.
+            meal_id (int): The ID of the meal to be removed.
+
+        Returns:
+            bool: True if removed, False if not found in favourites.
+        """
+        return await self._repository.remove_from_favourites(user_uuid, meal_id)
+    
+    async def get_favourites(self, user_uuid: UUID4) -> list:
+        """Get a user's favourite meals.
+
+        Args:
+            user_uuid (UUID4): The UUID of the user.
+
+        Returns:
+            list: A list of favourite meal names.
+        """
+        return await self._repository.get_favourites(user_uuid)

@@ -3,7 +3,7 @@ from pydantic import UUID4
 from src.infrastructure.utils.password import hash_password
 from src.core.domain.user import UserIn
 from src.core.repositories.iuser import IUserRepository
-from src.db import database, user_table
+from src.db import database, user_table, meal_table
 
 
 
@@ -66,3 +66,87 @@ class UserRepository(IUserRepository):
         user = await database.fetch_one(query)
 
         return user
+    
+    async def add_to_favourites(self, user_uuid: UUID4, meal_id: int) -> bool:
+        """Add a meal to the user's favourites list based on the meal ID.
+
+        Args:
+            user_uuid (UUID4): The UUID of the user.
+            meal_id (int): The ID of the meal to be added.
+
+        Returns:
+            bool: True if the meal was successfully added, False otherwise.
+        """
+  
+        query = meal_table.select(). \
+                where(meal_table.c.id == meal_id)
+        meal = await database.fetch_one(query)
+
+        if meal:
+            meal_name = meal["strMeal"]
+
+            query = user_table.select().where(user_table.c.id == user_uuid)
+            user = await database.fetch_one(query)
+
+            if user:
+                current_favourites = user["favourites"] if "favourites" in user else []
+                if meal_name not in current_favourites:
+                    current_favourites.append(meal_name)
+
+                    update_query = (
+                        user_table.update()
+                        .where(user_table.c.id == user_uuid)
+                        .values(favourites=current_favourites)
+                    )
+                    await database.execute(update_query)
+                    return True
+        return False
+    
+    async def remove_from_favourites(self, user_uuid: UUID4, meal_id: int) -> bool:
+        """Remove a meal from the user's favourites list based on the meal ID.
+
+        Args:
+            user_uuid (UUID4): The UUID of the user.
+            meal_id (int): The ID of the meal to be removed.
+
+        Returns:
+            bool: True if the meal was successfully removed, False otherwise.
+        """
+        query = meal_table.select().where(meal_table.c.id == meal_id)
+        meal = await database.fetch_one(query)
+
+        if meal:
+            meal_name = meal["strMeal"]
+
+            query = user_table.select().where(user_table.c.id == user_uuid)
+            user = await database.fetch_one(query)
+
+            if user:
+                current_favourites = user["favourites"] if "favourites" in user else []
+                if meal_name in current_favourites:
+                    current_favourites.remove(meal_name)
+
+                    update_query = (
+                        user_table.update()
+                        .where(user_table.c.id == user_uuid)
+                        .values(favourites=current_favourites)
+                    )
+                    await database.execute(update_query)
+                    return True
+        return False
+    
+    async def get_favourites(self, user_uuid: UUID4) -> list:
+        """Get a user's favourite meals by their UUID.
+
+        Args:
+            user_uuid (UUID4): The UUID of the user.
+
+        Returns:
+            list: A list of favourite meal names.
+        """
+        query = user_table.select().where(user_table.c.id == user_uuid)
+        user = await database.fetch_one(query)
+
+        if user:
+            return user["favourites"] if "favourites" in user else []
+        return []
