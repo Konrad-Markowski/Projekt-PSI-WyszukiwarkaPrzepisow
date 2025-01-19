@@ -120,3 +120,13 @@ class IMealRepository(ABC):
         Returns:
             List[MealDTO]: A list of recommended meals.
         """
+    @abstractmethod
+    async def get_by_ingredients(self, ingredient_name: str) -> List[dict]:
+        """The method getting meals by a specific ingredient.
+
+        Args:
+            ingredient_name (str): The name of the ingredient.
+
+        Returns:
+            List[dict]: Meals containing the specified ingredient.
+        """

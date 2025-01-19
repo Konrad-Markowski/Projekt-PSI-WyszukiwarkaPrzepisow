@@ -150,3 +150,13 @@ class UserRepository(IUserRepository):
         if user:
             return user["favourites"] if "favourites" in user else []
         return []
+    
+    async def get_all_users(self) -> list:
+        """Retrieve all users.
+
+        Returns:
+            list: A list of all user objects.
+        """
+        query = user_table.select()
+        users = await database.fetch_all(query)
+        return users

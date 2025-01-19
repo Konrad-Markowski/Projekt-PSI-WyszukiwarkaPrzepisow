@@ -55,6 +55,17 @@ class IMealService(ABC):
             Iterable[Any]: The meal details available.
         """
 
+    @abstractmethod
+    async def get_by_user(self, user_id: int) -> Iterable[Any]:
+        """The abstract method for getting meals by a specific user.
+
+        Args:
+            user_id (int): The ID of the user.
+
+        Returns:
+            Iterable[Any]: The meal details associated with the user.
+        """
+
 
     @abstractmethod
     async def recommend_meals(self, n: int = 3) -> List[dict]:
@@ -113,4 +124,13 @@ class IMealService(ABC):
             Any | None: The newly updated meal.
         """
 
-    
+    @abstractmethod
+    async def get_by_ingredients(self, ingredient_name: str) -> List[dict]:
+        """The method getting meals by a specific ingredient.
+
+        Args:
+            ingredient_name (str): The name of the ingredient.
+
+        Returns:
+            List[dict]: Meals containing the specified ingredient.
+        """

@@ -87,6 +87,19 @@ class MealService(IMealService):
         """
 
         return await self._repository.get_by_name(name)
+    
+    async def get_by_user(self, user_id: int) -> Iterable[MealDTO]:
+        """The method getting meals assigned to a particular user.
+
+        Args:
+            user_id (int): The id of the user.
+
+        Returns:
+            Iterable[MealDTO]: Meals assigned to the user.
+        """
+
+        return await self._repository.get_by_user(user_id)
+
 
     async def add_meal(self, data: MealBroker) -> Meal | None:
         """The method adding new meal to the data storage.
@@ -128,3 +141,13 @@ class MealService(IMealService):
     
 
 
+    async def get_by_ingredients(self, ingredient_name: str) -> List[dict]:
+        """The method getting meals by a specific ingredient.
+
+        Args:
+            ingredient_name (str): The name of the ingredient.
+
+        Returns:
+            List[dict]: Meals containing the specified ingredient.
+        """
+        return await self._repository.get_by_ingredients(ingredient_name)

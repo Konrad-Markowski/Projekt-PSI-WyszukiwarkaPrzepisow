@@ -56,7 +56,7 @@ meal_table = sqlalchemy.Table(
     sqlalchemy.Column("strCategory", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strArea", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strMealThumb", sqlalchemy.String, nullable=True),
-    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True), # opcjonalnie zmienić potem na ARRAY of strings
+    sqlalchemy.Column("strTags", sqlalchemy.String, nullable=True),
     sqlalchemy.Column("strYoutube", sqlalchemy.String, nullable=True),
     sqlalchemy.Column(
         "user_id",

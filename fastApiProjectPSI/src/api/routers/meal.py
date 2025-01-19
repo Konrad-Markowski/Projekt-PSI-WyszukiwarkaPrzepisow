@@ -3,6 +3,8 @@
 
 from typing import Iterable
 
+from pydantic import UUID4
+
 from dependency_injector.wiring import inject, Provide
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -76,6 +78,76 @@ async def get_all_meals(
 
     return meals
 
+@router.get("/category/{category}", response_model=Iterable[MealDTO], status_code=200)
+@inject
+async def get_meals_by_category(
+    category: str,
+    service: IMealService = Depends(Provide[Container.meal_service]),
+) -> Iterable:
+    """An endpoint for getting meals by category.
+
+    Args:
+        category (str): The name of the category.
+
+    Returns:
+        Iterable: The meal attributes collection.
+    """
+    meals = await service.get_by_category(category)
+    return meals
+
+
+@router.get("/area/{area}", response_model=Iterable[MealDTO], status_code=200)
+@inject
+async def get_meals_by_area(
+    area: str,
+    service: IMealService = Depends(Provide[Container.meal_service]),
+) -> Iterable:
+    """An endpoint for getting meals by area.
+
+    Args:
+        area (str): The name of the area.
+
+    Returns:
+        Iterable: The meal attributes collection.
+    """
+    meals = await service.get_by_area(area)
+    return meals
+
+
+@router.get("/name/{name}", response_model=Iterable[MealDTO], status_code=200)
+@inject
+async def get_meals_by_name(
+    name: str,
+    service: IMealService = Depends(Provide[Container.meal_service]),
+) -> Iterable:
+    """An endpoint for getting meals by name.
+
+    Args:
+        name (str): The name of the meal.
+
+    Returns:
+        Iterable: The meal attributes collection.
+    """
+    meals = await service.get_by_name(name)
+    return meals
+
+
+@router.get("/user/{user_id}", response_model=Iterable[MealDTO], status_code=200)
+@inject
+async def get_meals_by_user(
+    user_id: UUID4,
+    service: IMealService = Depends(Provide[Container.meal_service]),
+) -> Iterable:
+    """An endpoint for getting meals by user.
+
+    Args:
+        user_id (UUID4): The UUID of the user.
+
+    Returns:
+        Iterable: The meal attributes collection.
+    """
+    meals = await service.get_by_user(user_id)
+    return meals
 
 @router.get("/meals/recommendations", status_code=200)
 @inject
@@ -121,6 +193,22 @@ async def get_meal_by_id(
 
     raise HTTPException(status_code=404, detail="Meal not found")
 
+@router.get("/ingredient/{ingredient_name}", response_model=Iterable[MealDTO], status_code=200)
+@inject
+async def get_meals_by_ingredient(
+    ingredient_name: str,
+    service: IMealService = Depends(Provide[Container.meal_service]),
+) -> Iterable:
+    """An endpoint for getting meals by ingredient.
+
+    Args:
+        ingredient_name (str): The name of the ingredient.
+
+    Returns:
+        Iterable: The meal attributes collection.
+    """
+    meals = await service.get_by_ingredients(ingredient_name)
+    return meals
 
 @router.put("/{meal_id}", response_model=Meal, status_code=201)
 @inject
@@ -179,23 +267,37 @@ async def update_meal(
 async def delete_meal(
     meal_id: int,
     service: IMealService = Depends(Provide[Container.meal_service]),
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
 ) -> None:
     """An endpoint for deleting meals.
 
     Args:
         meal_id (int): The id of the meal.
         service (IMealService, optional): The injected service dependency.
+        credentials (HTTPAuthorizationCredentials, optional): The credentials.
 
     Raises:
         HTTPException: 404 if meal does not exist.
     """
 
-    if await service.get_by_id(meal_id=meal_id):
-        await service.delete_meal(meal_id)
+    token = credentials.credentials
+    token_payload = jwt.decode(
+        token,
+        key=consts.SECRET_KEY,
+        algorithms=[consts.ALGORITHM],
+    )
+    user_uuid = token_payload.get("sub")
 
+    if not user_uuid:
+        raise HTTPException(status_code=403, detail="Unauthorized")
+
+    if meal_data := await service.get_by_id(meal_id=meal_id):
+        if str(meal_data.user_id) != user_uuid:
+            raise HTTPException(status_code=403, detail="Unauthorized")
+
+        await service.delete_meal(meal_id)
         return
 
     raise HTTPException(status_code=404, detail="Meal not found")
 
 
-    

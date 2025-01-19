@@ -91,3 +91,11 @@ class IUserService(ABC):
         Returns:
             list: A list of favourite meal names.
         """
+
+    @abstractmethod
+    async def get_all_users(self) -> list[UserDTO]:
+        """A method to get all users.
+
+        Returns:
+            list[UserDTO]: A list of all user DTOs.
+        """

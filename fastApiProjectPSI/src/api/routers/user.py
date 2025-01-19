@@ -10,6 +10,7 @@ from src.infrastructure.dto.tokendto import TokenDTO
 from src.infrastructure.dto.userdto import UserDTO
 from src.infrastructure.services.iuser import IUserService
 from pydantic import UUID4
+from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 
 router = APIRouter()
 
@@ -70,7 +71,7 @@ async def authenticate_user(
 async def get_user_by_uuid(
     uuid: UUID4,
     service: IUserService = Depends(Provide[Container.user_service]),
-) -> dict:
+) -> UserDTO:
     """A router coroutine for getting user by UUID.
 
     Args:
@@ -78,16 +79,15 @@ async def get_user_by_uuid(
         service (IUserService, optional): The injected user service.
 
     Returns:
-        dict: The user DTO details.
+        UserDTO: The user DTO details.
     """
 
-    if user := await service.get_by_uuid(uuid):
-        return user.model_dump()
+    user = await service.get_by_uuid(uuid)
 
-    raise HTTPException(
-        status_code=404,
-        detail="User not found",
-    )
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    return UserDTO(**dict(user))
 
 
 @router.get("/user/email/{email}", status_code=200)
@@ -106,11 +106,14 @@ async def get_user_by_email(
         detail="User not found",
     )
 
+bearer_scheme = HTTPBearer()
+
 @router.post("/user/favourites/{uuid}/add", status_code=201)
 @inject
 async def add_to_favourites(
     uuid: UUID4,
     meal_id: int,
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     service: IUserService = Depends(Provide[Container.user_service]),
 ) -> dict:
     """Add a meal to the user's favourites."""
@@ -127,6 +130,7 @@ async def add_to_favourites(
 async def remove_from_favourites(
     uuid: UUID4,
     meal_id: int,
+    credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     service: IUserService = Depends(Provide[Container.user_service]),
 ) -> dict:
     """Remove a meal from the user's favourites.
@@ -165,3 +169,12 @@ async def get_favourites(
         status_code=404,
         detail="User not found",
     )
+
+@router.get("/users", response_model=List[UserDTO], status_code=200)
+@inject
+async def get_all_users(
+    service: IUserService = Depends(Provide[Container.user_service]),
+) -> List[UserDTO]:
+    """Retrieve all users."""
+    users = await service.get_all_users()
+    return [UserDTO(**user).model_dump() for user in users]

@@ -76,3 +76,11 @@ class IUserRepository(ABC):
         Returns:
             Any | None: The user's favourites.
         """
+
+    @abstractmethod
+    async def get_all_users(self) -> list[Any] | None:
+        """A method to retrieve all users.
+
+        Returns:
+            list[Any] | None: A list of user objects if any exist.
+        """

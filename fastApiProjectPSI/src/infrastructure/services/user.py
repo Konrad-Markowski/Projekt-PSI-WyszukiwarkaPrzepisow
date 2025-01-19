@@ -110,3 +110,11 @@ class UserService(IUserService):
             list: A list of favourite meal names.
         """
         return await self._repository.get_favourites(user_uuid)
+    
+    async def get_all_users(self) -> list[UserDTO]:
+        """Retrieve all users.
+
+        Returns:
+            list[UserDTO]: A list of user DTOs.
+        """
+        return await self._repository.get_all_users()
