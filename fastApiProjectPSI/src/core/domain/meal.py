@@ -4,7 +4,7 @@ from pydantic import BaseModel, UUID4, ConfigDict
 
 
 class MealIn(BaseModel):
-    """Model representing airport's DTO attributes."""
+    """Model representing meal's DTO attributes."""
     strMeal: str
     strInstructions: str
     ingredients: List[str]
